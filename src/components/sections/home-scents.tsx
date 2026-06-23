@@ -1,18 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 import { Flame, Check } from "lucide-react";
 import { homeScents } from "@/lib/content";
+import { useIsDesktop } from "@/lib/use-media";
 
 export function HomeScents() {
   const ref = useRef<HTMLElement>(null);
+  const isDesktop = useIsDesktop();
+  const reduceMotion = useReducedMotion();
+  const parallaxOn = isDesktop && !reduceMotion;
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const yImg = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+  const yImgRaw = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+  const yImg = parallaxOn ? yImgRaw : undefined;
 
   return (
     <section
@@ -67,7 +73,10 @@ export function HomeScents() {
           className="lg:col-span-7 order-1 lg:order-2 relative"
         >
           <div className="relative aspect-[5/6] md:aspect-[4/5] rounded-3xl overflow-hidden bg-surface border border-white/5">
-            <motion.div style={{ y: yImg }} className="absolute inset-0">
+            <motion.div
+              style={yImg ? { y: yImg, willChange: "transform" } : undefined}
+              className="absolute inset-0"
+            >
               <Image
                 src={homeScents.image}
                 alt={homeScents.title}

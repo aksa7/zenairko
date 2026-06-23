@@ -41,7 +41,7 @@ export function Promotions() {
             </div>
             <a
               href="#kontaktai"
-              className="shrink-0 inline-flex items-center justify-center h-12 px-8 rounded-full bg-gold text-black text-xs uppercase tracking-[0.25em] font-medium hover:bg-gold-soft transition-all duration-500"
+              className="shrink-0 inline-flex items-center justify-center h-12 px-8 rounded-full bg-gold text-black text-xs uppercase tracking-[0.25em] font-medium hover:bg-gold-soft transition-colors duration-500"
             >
               {promo.cta}
             </a>

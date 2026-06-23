@@ -1,18 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 import { featuredPerfumes } from "@/lib/content";
+import { useIsDesktop } from "@/lib/use-media";
 
 export function FeaturedPerfumes() {
   const ref = useRef<HTMLElement>(null);
+  const isDesktop = useIsDesktop();
+  const reduceMotion = useReducedMotion();
+  const parallaxOn = isDesktop && !reduceMotion;
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const yTitle = useTransform(scrollYProgress, [0, 1], [60, -60]);
-  const yBg = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const yTitleRaw = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const yBgRaw = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const yTitle = parallaxOn ? yTitleRaw : undefined;
+  const yBg = parallaxOn ? yBgRaw : undefined;
 
   return (
     <section
@@ -20,18 +27,22 @@ export function FeaturedPerfumes() {
       ref={ref}
       className="relative bg-black py-32 md:py-44 overflow-hidden"
     >
-      {/* Parallax decorative big text */}
-      <motion.div
-        style={{ y: yBg }}
-        aria-hidden
-        className="absolute -top-20 left-1/2 -translate-x-1/2 select-none pointer-events-none whitespace-nowrap font-serif text-[18vw] leading-none text-white/[0.025] uppercase tracking-tighter"
-      >
-        Parfum · Niche
-      </motion.div>
+      {/* Parallax decorative big text — desktop only.
+          On mobile the huge 18vw text was being repainted on every scroll
+          frame, which is the worst case for mobile compositors. */}
+      {parallaxOn && (
+        <motion.div
+          style={{ y: yBg, willChange: "transform" }}
+          aria-hidden
+          className="absolute -top-20 left-1/2 -translate-x-1/2 select-none pointer-events-none whitespace-nowrap font-serif text-[18vw] leading-none text-white/[0.025] uppercase tracking-tighter"
+        >
+          Parfum · Niche
+        </motion.div>
+      )}
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
         <motion.div
-          style={{ y: yTitle }}
+          style={yTitle ? { y: yTitle, willChange: "transform" } : undefined}
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16 md:mb-24"
         >
           <motion.div
@@ -66,12 +77,12 @@ export function FeaturedPerfumes() {
           {featuredPerfumes.map((p, i) => (
             <motion.article
               key={p.id}
-              initial={{ opacity: 0, y: 60 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{
-                duration: 0.85,
-                delay: i * 0.1,
+                duration: 0.7,
+                delay: i * 0.08,
                 ease: [0.22, 1, 0.36, 1],
               }}
               className="group relative"
@@ -82,7 +93,7 @@ export function FeaturedPerfumes() {
                   alt={p.name}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms] ease-out float-slow"
+                  className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out float-slow"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
               </div>

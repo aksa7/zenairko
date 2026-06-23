@@ -30,35 +30,10 @@
   border-color: var(--border);
 }
 
+/* No `scroll-behavior: smooth` here — Lenis owns smooth scrolling.
+   Mixing the two causes anchor-jump jitter. */
 html {
   background: var(--background);
-}
-
-/* Lenis smooth scroll — must NOT use CSS scroll-behavior: smooth (conflicts). */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-/* Offset in-page anchor targets so the fixed navbar doesn't cover them. */
-section[id],
-[id] {
-  scroll-margin-top: 80px;
-}
-
-/* Avoid blue tap flash on touch devices for a premium feel. */
-a,
-button {
-  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -91,7 +66,12 @@ body {
   background: var(--gold-deep);
 }
 
-/* Gold shimmer for promo banners */
+/* ---------------------------------------------------------------
+   Continuous (infinite) animations.
+   Desktop only — mobile gets static fallbacks (see overrides below)
+   so phones never burn frames on background ambience.
+   --------------------------------------------------------------- */
+
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -109,51 +89,67 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: shimmer 6s linear infinite;
 }
 
 @keyframes float-slow {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-.float-slow {
-  animation: float-slow 7s ease-in-out infinite;
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -12px, 0); }
 }
 
 @keyframes flicker {
-  0%, 100% { opacity: 0.9; transform: scale(1); }
-  25% { opacity: 0.78; transform: scale(0.98); }
-  50% { opacity: 1; transform: scale(1.02); }
-  75% { opacity: 0.85; transform: scale(0.99); }
-}
-.flicker {
-  animation: flicker 2.6s ease-in-out infinite;
+  0%, 100% { opacity: 0.9; transform: translate3d(0,0,0) scale(1); }
+  25% { opacity: 0.78; transform: translate3d(0,0,0) scale(0.98); }
+  50% { opacity: 1; transform: translate3d(0,0,0) scale(1.02); }
+  75% { opacity: 0.85; transform: translate3d(0,0,0) scale(0.99); }
 }
 
 @keyframes kenburns {
-  0% { transform: scale(1) translate(0,0); }
-  100% { transform: scale(1.15) translate(-2%, -2%); }
-}
-.kenburns {
-  animation: kenburns 22s ease-out alternate infinite;
+  0% { transform: scale(1) translate3d(0, 0, 0); }
+  100% { transform: scale(1.15) translate3d(-2%, -2%, 0); }
 }
 
-/* Magnetic glow utility */
+/* Activate continuous animations only on desktop. Mobile keeps the
+   visual (gradient text, scaled image) but doesn't run a paint loop. */
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .gold-shimmer {
+    animation: shimmer 6s linear infinite;
+    will-change: background-position;
+  }
+  .float-slow {
+    animation: float-slow 7s ease-in-out infinite;
+    will-change: transform;
+  }
+  .flicker {
+    animation: flicker 2.6s ease-in-out infinite;
+    will-change: opacity, transform;
+  }
+  .kenburns {
+    animation: kenburns 22s ease-out alternate infinite;
+    will-change: transform;
+  }
+}
+
+/* Magnetic glow utility (static, cheap) */
 .gold-glow {
   box-shadow:
-    0 0 0 1px rgba(201,164,92,0.35),
-    0 0 24px -4px rgba(201,164,92,0.35);
+    0 0 0 1px rgba(201, 164, 92, 0.35),
+    0 0 24px -4px rgba(201, 164, 92, 0.35);
 }
 
-/* Respect reduced motion */
+/* Respect reduced motion globally. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .kenburns, .float-slow, .flicker, .gold-shimmer {
+  .kenburns,
+  .float-slow,
+  .flicker,
+  .gold-shimmer {
     animation: none !important;
   }
 }

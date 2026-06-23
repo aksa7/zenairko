@@ -141,7 +141,7 @@ export function Contact() {
             <button
               type="submit"
               disabled={pending}
-              className="group inline-flex items-center justify-center gap-3 h-12 px-8 rounded-full bg-gold text-black text-xs uppercase tracking-[0.25em] font-medium hover:bg-gold-soft disabled:opacity-60 transition-all duration-500"
+              className="group inline-flex items-center justify-center gap-3 h-12 px-8 rounded-full bg-gold text-black text-xs uppercase tracking-[0.25em] font-medium hover:bg-gold-soft disabled:opacity-60 transition-colors duration-500"
             >
               {pending ? "Siunčiame…" : "Siųsti užklausą"}
               <Send className="size-4 group-hover:translate-x-0.5 transition-transform" />
@@ -166,7 +166,7 @@ function ContactItem({
 }) {
   const content = (
     <div className="group flex items-start gap-4">
-      <span className="shrink-0 mt-1 grid place-items-center size-10 rounded-full border border-gold/40 text-gold group-hover:bg-gold group-hover:text-black transition-all duration-500">
+      <span className="shrink-0 mt-1 grid place-items-center size-10 rounded-full border border-gold/40 text-gold group-hover:bg-gold group-hover:text-black transition-colors duration-500">
         {icon}
       </span>
       <div>

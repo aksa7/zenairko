@@ -17,10 +17,15 @@ export function SmoothScroll() {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReduced) return;
 
+    // Mobile gets a lighter Lenis config — smoothWheel only matters for
+    // mouse/trackpad; on touch devices native momentum is already buttery
+    // and `syncTouch` was the main source of scroll fighting `useScroll`.
+    const isCoarse = window.matchMedia("(pointer: coarse)").matches;
     const lenis = new Lenis({
-      duration: 1.15,
+      duration: isCoarse ? 0.9 : 1.15,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      syncTouch: false,
     });
     lenisInstance = lenis;
 

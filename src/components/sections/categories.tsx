@@ -58,7 +58,7 @@ export function Categories() {
                   alt={c.title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-[1200ms] ease-out"
+                  className="object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-[opacity,transform] duration-700 ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 <div className="absolute inset-0 p-7 md:p-8 flex flex-col justify-end">
@@ -71,7 +71,7 @@ export function Categories() {
                         {c.title}
                       </h3>
                     </div>
-                    <span className="shrink-0 size-10 rounded-full border border-gold/40 grid place-items-center text-gold group-hover:bg-gold group-hover:text-black transition-all duration-500">
+                    <span className="shrink-0 size-10 rounded-full border border-gold/40 grid place-items-center text-gold group-hover:bg-gold group-hover:text-black transition-colors duration-500">
                       <ArrowUpRight className="size-4" />
                     </span>
                   </div>

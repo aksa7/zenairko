@@ -86,11 +86,12 @@ export function Navbar() {
         {open && (
           <motion.div
             key="mobile-menu"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="md:hidden overflow-hidden border-t border-white/5 bg-background/95 backdrop-blur-xl"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            style={{ willChange: "transform, opacity" }}
+            className="md:hidden origin-top border-t border-white/5 bg-background/95 backdrop-blur-xl"
           >
             <div className="px-6 py-6 flex flex-col gap-5">
               {nav.map((item, i) => (

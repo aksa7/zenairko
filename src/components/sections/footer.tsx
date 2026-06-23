@@ -111,7 +111,7 @@ function SocialLink({
     <a
       href={href}
       aria-label={label}
-      className="grid place-items-center size-10 rounded-full border border-white/10 text-foreground/70 hover:border-gold hover:text-gold transition-all duration-500"
+      className="grid place-items-center size-10 rounded-full border border-white/10 text-foreground/70 hover:border-gold hover:text-gold transition-colors duration-500"
     >
       {children}
     </a>
